@@ -14,8 +14,12 @@ if st.button("Get Recommendations"):
         feature_vectors = similar_stocks.prepare_data(similar_stocks.STOCK_UNIVERSE)
 
     if feature_vectors:
-        tickers_to_consider = [ticker for ticker in similar_stocks.STOCK_UNIVERSE if similar_stocks.STOCK_SECTORS.get(ticker) in selected_sectors] if selected_sectors else similar_stocks.STOCK_UNIVERSE
-
+        if selected_sectors:
+            tickers_to_consider = [ticker for ticker in similar_stocks.STOCK_UNIVERSE 
+                                  if similar_stocks.STOCK_SECTORS.get(ticker) in selected_sectors 
+                                  or ticker == selected_ticker]
+        else:
+            tickers_to_consider = similar_stocks.STOCK_UNIVERSE
 
         recommendations = similar_stocks.knn_recommend(selected_ticker, feature_vectors, tickers_to_consider)
 

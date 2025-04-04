@@ -125,7 +125,6 @@ def prepare_data(tickers):
             st.error(f"Not enough data for {ticker} to get last row. Error: {e}. Increase the data period or choose a stock with more data.")
             return {}
 
-
     if all_features.empty:
         st.warning("No valid feature data could be extracted.")
         return {}
@@ -135,7 +134,7 @@ def prepare_data(tickers):
 
     scaled_features = scaler.fit_transform(all_features)
 
-    for i, ticker in enumerate(processed_stocks.keys()):
+    for i, ticker in enumerate(all_features.index):
         feature_vectors[ticker] = scaled_features[i]
 
     return feature_vectors
@@ -158,7 +157,6 @@ def knn_recommend(target_ticker, feature_vectors, tickers_to_consider, k=5):
     
     tickers = valid_tickers
     features = np.array([feature_vectors[ticker] for ticker in tickers])
-
 
     target_index = tickers.index(target_ticker)
 
