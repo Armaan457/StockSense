@@ -97,7 +97,7 @@ elif page == "🤝 Similar Stocks":
                     for j in range(len(recommendations), 5):
                         st.write("- N/A")
 
-                # 🎯 Visualize in 3D using PCA
+                # Visualize in 3D using PCA
                 tickers = [selected_ticker] + [ticker for ticker, _ in recommendations]
                 vectors = np.array([feature_vectors[ticker] for ticker in tickers])
 

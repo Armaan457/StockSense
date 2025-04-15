@@ -1,4 +1,6 @@
 from datetime import datetime
+import streamlit as st
+import matplotlib.pyplot as plt
 import numpy as np
 import yfinance as yf
 from sklearn.preprocessing import MinMaxScaler
@@ -125,5 +127,15 @@ def run_stock_prediction(symbol):
         "previous_price": previous_day_price,
         "trend": trend
     }
+
+    fig1 = plt.figure(figsize=(12, 6))
+    plt.plot(true_test_prices, label='Actual Prices', color='blue')
+    plt.plot(predicted_test_prices, label='Predicted Prices', color='orange')
+    plt.title(f"{symbol} - Actual vs Predicted Stock Prices (Test Set)")
+    plt.xlabel("Time") 
+    plt.ylabel("Price")
+    plt.legend()
+    plt.grid(True)
+    st.pyplot(fig1)
 
     return result
