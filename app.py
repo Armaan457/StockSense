@@ -13,7 +13,7 @@ st.sidebar.title("🔎 Navigation")
 page = st.sidebar.radio("Go to", ["📊 Stock Prediction", "🤝 Similar Stocks"])
 
 
-@st.cache_resource(ttl=3600)
+@st.cache_resource(ttl=86400)
 def get_feature_vectors():
     return similar_stocks.prepare_data(similar_stocks.STOCK_UNIVERSE)
 
@@ -24,7 +24,7 @@ if page == "📊 Stock Prediction":
     stock_symbol = st.text_input("Enter Stock Symbol (e.g., AAPL, MSFT, GOOG):", value="GOOG")
 
     if st.button("Predict"):
-        with st.spinner("Running LSTM model..."):
+        with st.spinner("Analysing..."):
             try:
                 result = run_stock_prediction(stock_symbol.upper())
                 st.success(f"Prediction for {result['symbol'].upper()}")
@@ -49,11 +49,11 @@ if page == "📊 Stock Prediction":
                 col1, col2, col3 = st.columns(3)
 
                 with col1:
-                    st.metric(label="NRMSE", value=f"{result['nrmse']:.4f}")
-                with col2:
                     st.metric(label="MAPE", value=f"{result['mape']:.4f}")
-                with col3:
+                with col2:
                     st.metric(label="R² Score", value=f"{result['r2']:.4f}")
+                with col3:
+                    st.metric(label="NRMSE", value=f"{result['nrmse']:.4f}")
             except Exception as e:
                 st.error(f"Error: {e}")
 

@@ -90,6 +90,12 @@ def create_future_dataset(model, last_seq, scaler, look_back, days, num_features
     future_prices = scaler.inverse_transform(inverted_data)[:, 0]
     return future_prices
 
+@st.cache_resource(ttl=86400)  # Cache for 1 day
+def get_or_train_model(symbol, X_train, y_train, input_shape):
+    model = build_model(input_shape)
+    model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=0)
+    return model
+
 def run_stock_prediction(symbol):
     df = fetch_stock_data(symbol)
     df = add_indicators(df)
@@ -100,8 +106,7 @@ def run_stock_prediction(symbol):
     X_train, X_test = X[:split_idx], X[split_idx:]
     y_train, y_test = y[:split_idx], y[split_idx:]
 
-    model = build_model((LOOK_BACK, X.shape[2]))
-    model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=0)
+    model = get_or_train_model(symbol, X_train, y_train, (LOOK_BACK, X.shape[2]))
 
     predicted_test = model.predict(X_test, verbose=0)
     predicted_test_prices = scaler.inverse_transform(np.column_stack((predicted_test, np.zeros((len(predicted_test), X.shape[2]-1)))))[:, 0]
@@ -114,7 +119,7 @@ def run_stock_prediction(symbol):
 
     last_sequence = scaled_data[-LOOK_BACK:]
     predicted_price = create_future_dataset(model, last_sequence, scaler, LOOK_BACK, FUTURE_DAYS, X.shape[2])[0]
-    previous_day_price = df['Close'].iloc[-1].values[0]
+    previous_day_price = df['Close'].iloc[-1].item()
 
     trend = "Increase 📈" if predicted_price > previous_day_price else "Decrease 📉"
 

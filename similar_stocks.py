@@ -29,7 +29,6 @@ STOCK_SECTORS = {
     "AMD": "Technology", "MCD": "Consumer Discretionary", "LIN": "Materials", "MSI": "Technology", "IBM": "Technology", "AMT": "Real Estate", "DHR": "Healthcare", "TXN": "Technology", "UPS": "Industrials", "HON": "Industrials"
 }
 
-@st.cache_data(ttl=3600)  # Cache for 1 hour
 def get_stock_data(ticker, period="1y"):
     try:
         data = yf.download(ticker, period=period)
@@ -42,7 +41,6 @@ def get_stock_data(ticker, period="1y"):
         return None
 
 
-@st.cache_data(ttl=3600)  # Cache for 1 hour
 def calculate_indicators(df):
     df = df.copy()
     df['SMA_20'] = df['Close'].rolling(window=20).mean()
