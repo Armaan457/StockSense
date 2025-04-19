@@ -1,4 +1,7 @@
+from datetime import datetime
+import pandas as pd
 import streamlit as st
+from anomaly_detection import anomaly_detection
 from price_predictor import run_stock_prediction
 import similar_stocks
 from scipy.stats import rankdata
@@ -10,7 +13,7 @@ st.set_page_config(page_title="Stock Dashboard", layout="wide")
 
 
 st.sidebar.title("🔎 Navigation")
-page = st.sidebar.radio("Go to", ["📊 Stock Prediction", "🤝 Similar Stocks"])
+page = st.sidebar.radio("Go to", ["📊 Stock Prediction", "🤝 Similar Stocks",  "🚨 Anomaly Detection"])
 
 
 @st.cache_resource(ttl=86400)
@@ -33,7 +36,7 @@ if page == "📊 Stock Prediction":
                 with col1:
                     st.metric("Previous Close", f"${result['previous_price']:.2f}")
                 with col2:
-                    st.metric("📈 Predicted Close", f"${result['predicted_price']:.2f}", delta=f"{result['predicted_price'] - result['previous_price']:.2f}")
+                    st.metric("Predicted Close", f"${result['predicted_price']:.2f}", delta=f"{result['predicted_price'] - result['previous_price']:.2f}")
 
                 st.write("### Price Comparison")
                 fig = go.Figure()
@@ -146,3 +149,40 @@ elif page == "🤝 Similar Stocks":
                 st.warning("No recommendations found.")
         else:
             st.error("Failed to prepare data. See logs for more details.")
+
+elif page == "🚨 Anomaly Detection":
+    st.title("🚨 Stock Anomaly Explorer")
+
+    stock_symbol = st.text_input("Enter Stock Symbol:", value="NVDA")
+    col1, col2 = st.columns(2)
+    with col1:
+        from_date = st.date_input("From Date:", value=datetime(2023, 1, 1))
+    with col2:
+        to_date = st.date_input("To Date:", value=datetime(2025, 4, 17))
+
+    if st.button("Explore Anomalies"):
+        with st.spinner("Hunting for anomalies..."):
+            try:
+                df_with_returns, fig = anomaly_detection(
+                    stock_symbol.upper(),
+                    start_date=from_date.strftime("%Y-%m-%d"),
+                    end_date=to_date.strftime("%Y-%m-%d")
+                )
+                if fig:
+                    st.pyplot(fig)
+
+                    st.info("💡 Hint: Red 'x' marks indicate days with unusually large price changes compared to the typical behavior of this stock.")
+                    
+                    if not df_with_returns.empty:
+                        df_with_returns['Returns'] = df_with_returns['Returns'] * 100
+                        df_with_returns.index = pd.to_datetime(df_with_returns.index).date  
+                        df_with_returns.index.name = "Date" 
+                        df_with_returns = df_with_returns.reset_index()
+                        st.write("### Anomalies and their returns")
+                        st.dataframe(df_with_returns)
+                    else:
+                        st.info("No anomalies detected.")
+                else:
+                    st.error("Anomaly detection failed. Please check the stock symbol and date range.")
+            except Exception as e:
+                st.error(f"Error during anomaly detection: {e}")
