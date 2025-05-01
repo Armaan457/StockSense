@@ -40,14 +40,32 @@ if page == "📊 Stock Prediction":
 
                 st.write("### Price Comparison")
                 fig = go.Figure()
+                trend_color = "green" if result["predicted_price"] > result["previous_price"] else "red"
+                trend_text = "Increase" if result["predicted_price"] > result["previous_price"] else "Decrease"
                 fig.add_trace(go.Scatter(
                     x=["Previous", "Predicted"],
                     y=[result["previous_price"], result["predicted_price"]],
                     mode="lines+markers",
-                    name="Price Trend"
+                    name="Price Trend",
+                    line=dict(color=trend_color) 
                 ))
-                fig.update_layout(title="Previous vs Predicted Prices", xaxis_title="Type", yaxis_title="Price ($)")
+                fig.add_annotation(
+                    x="Predicted",
+                    y=result["predicted_price"],
+                    text=trend_text,
+                    showarrow=True,
+                    arrowhead=2,
+                    ax=0,
+                    ay=-40,
+                    font=dict(color=trend_color)
+                )
+                fig.update_layout(
+                    title="Previous vs Predicted Prices",
+                    xaxis_title="Type",
+                    yaxis_title="Price ($)"
+                )
                 st.plotly_chart(fig, use_container_width=True)
+
                 st.subheader("🧠 Model Evaluation")
                 col1, col2, col3 = st.columns(3)
 
