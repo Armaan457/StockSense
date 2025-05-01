@@ -13,7 +13,7 @@ Welcome to **StockSense**, a comprehensive web application designed to provide i
   - **NRMSE (Normalized Root Mean Squared Error)**
 
 ### 2. **Similar Stock Recommendations**
-- Find stocks similar to a selected stock based on various indicators.
+- Find stocks similar to a selected stock based on various indicators using **K nearest neighbors**.
 - Filter recommendations by sector (e.g., Technology, Healthcare).
 - Visualize recommendations in a **3D plot using PCA (Principal Component Analysis)** for better visualisation.
 
@@ -41,7 +41,7 @@ Welcome to **StockSense**, a comprehensive web application designed to provide i
 
 3. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements-dev.txt
    ```
 
 4. Run the application:
@@ -53,7 +53,7 @@ Welcome to **StockSense**, a comprehensive web application designed to provide i
 ## Technologies used 
 - **AI/ML**: Tensorflow and scikit-learn
 - **Data**: yfinance and pandas
-- **Visuliations**: Matplotlib and plotly
+- **Visualizations**: Matplotlib and plotly
 - **User Interface**: Streamlit
 
 
