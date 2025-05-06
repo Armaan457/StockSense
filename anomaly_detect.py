@@ -34,5 +34,5 @@ def anomaly_detection(ticker, start_date="2023-01-01", end_date="2025-04-17"):
         return  return_anomalies[["Returns"]], fig 
     
     except Exception as e:
-        st.error(f"Error during anomaly detection: {e}")
+        st.error(f"Error during anomaly detection")
         return None

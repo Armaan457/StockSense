@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import yfinance as yf
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_absolute_percentage_error, mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import mean_absolute_percentage_error, mean_squared_error, r2_score
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 import warnings
