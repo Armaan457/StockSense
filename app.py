@@ -1,9 +1,9 @@
 from datetime import datetime
 import pandas as pd
 import streamlit as st
-from anomaly_detect import anomaly_detection
-from price_predictor import run_stock_prediction
-import similar_stocks
+from Features.anomaly_detect import anomaly_detection
+from Features.price_predictor import run_stock_prediction
+import Features.similar_stocks as similar_stocks
 from scipy.stats import rankdata
 import plotly.graph_objects as go
 from sklearn.decomposition import PCA
