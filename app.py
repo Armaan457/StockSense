@@ -34,9 +34,14 @@ if page == "📊 Stock Prediction":
 
                 col1, col2 = st.columns(2)
                 with col1:
-                    st.metric("Previous Close", f"${result['previous_price']:.2f}")
+                    currency_symbol = "₹" if stock_symbol.upper().endswith(".NS") else "$"
+                    st.metric("Previous Close", f"{currency_symbol}{result['previous_price']:.2f}")
                 with col2:
-                    st.metric("Predicted Close", f"${result['predicted_price']:.2f}", delta=f"{result['predicted_price'] - result['previous_price']:.2f}")
+                    st.metric(
+                        "Predicted Close",
+                        f"{currency_symbol}{result['predicted_price']:.2f}",
+                        delta=f"{result['predicted_price'] - result['previous_price']:.2f}"
+                    )
 
                 st.write("### Price Comparison")
                 fig = go.Figure()
