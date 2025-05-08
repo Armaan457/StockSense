@@ -10,8 +10,7 @@ def anomaly_detection(ticker, start_date="2023-01-01", end_date="2025-04-17"):
 
         df = yf.download(ticker, start=start_date, end=end_date)
 
-        df.fillna(method="ffill", inplace=True)
-        df.fillna(method="bfill", inplace=True)
+        df.dropna(inplace=True)
 
         df["Returns"] = df["Close"].pct_change().fillna(0) 
         scaler = MinMaxScaler() 

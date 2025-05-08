@@ -1,5 +1,5 @@
 import streamlit as st
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics.pairwise import euclidean_distances
 from scipy.stats import rankdata
 import yfinance as yf
@@ -128,7 +128,7 @@ def prepare_data(tickers):
         return {}
 
     all_features = all_features.T
-    scaler = StandardScaler()
+    scaler = MinMaxScaler()
 
     scaled_features = scaler.fit_transform(all_features)
 
